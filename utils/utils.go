@@ -239,43 +239,6 @@ func GetMinRelayTxFee() (float64, error) {
 	return mempoolInfo.RelayFee, nil
 }
 
-// func Bech32AddressToBytes(address string) ([]byte, error) {
-// 	addr, err := btcutil.DecodeAddress(address, &chaincfg.MainNetParams)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("invalid Bech32 address: %v", err)
-// 	}
-// 	witnessAddr, ok := addr.(*btcutil.AddressWitnessPubKeyHash)
-// 	if !ok {
-// 		return nil, fmt.Errorf("address is not a Bech32 witness address")
-// 	}
-// 	witnessProgram := witnessAddr.WitnessProgram()
-// 	return witnessProgram, nil
-// }
-
-// func Bech32ToHex(bech32Addr string) (string, error) {
-// 	// Decode the bech32 address
-// 	addr, err := btcutil.DecodeAddress(bech32Addr, &chaincfg.MainNetParams)
-// 	if err != nil {
-// 		return "", fmt.Errorf("failed to decode bech32 address: %v", err)
-// 	}
-
-// 	// Handle different witness address types
-// 	var witnessProgram []byte
-// 	switch a := addr.(type) {
-// 	case *btcutil.AddressWitnessPubKeyHash:
-// 		witnessProgram = a.WitnessProgram()
-// 	case *btcutil.AddressWitnessScriptHash:
-// 		witnessProgram = a.WitnessProgram()
-// 	default:
-// 		return "", fmt.Errorf("unsupported address type: %T", addr)
-// 	}
-
-// 	// Convert to hex
-// 	hexAddr := hex.EncodeToString(witnessProgram)
-
-// 	return hexAddr, nil
-// }
-
 func HexToBech32(hexAddr string, network *chaincfg.Params) (string, error) {
 	// Decode hex string to bytes
 	decoded, err := hex.DecodeString(hexAddr)
@@ -321,7 +284,7 @@ func CleanXpubKey(input string) string {
 	// Find the position of "tpub"
 	pubIndex := strings.Index(input, "tpub")
 	if pubIndex == -1 {
-		pubIndex := strings.Index(input, "xpub")
+		pubIndex = strings.Index(input, "xpub")
 		if pubIndex == -1 {
 			return input // Return original if neither "tpub" nor "xpub" is found
 		}

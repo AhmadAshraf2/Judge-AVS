@@ -133,6 +133,8 @@ func GenerateMultisigwithdrawTx(withdrawBTCAddr string, podEthAddr string) (stri
 
 	outputs = []btcComms.TxOutput{btcComms.TxOutput{withdrawBTCAddr: totalAmountInBTC}}
 
+	fmt.Println("inputs : ", inputs)
+	fmt.Println("outputs : ", outputs)
 	p, err := btcComms.CreatePsbt(inputs, outputs, 0, wallet)
 	if err != nil {
 		fmt.Println("error in creating psbt : ", err)

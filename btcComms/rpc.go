@@ -310,6 +310,10 @@ func UtxoUpdatePsbt(psbtStr string, desc string, wallet string) (string, error) 
 
 func CreatePsbtV1(utxo TxInput, outputs []TxOutput, unlockHeight uint32, scriptPubKey []byte, amount int64) (*psbt.Packet, error) {
 	// Create a new PSBT
+	chainParams, err := getChainParams()
+	if err != nil {
+		return nil, err
+	}
 	hash, err := chainhash.NewHashFromStr(utxo.Txid)
 	if err != nil {
 		log.Fatalf("Invalid hash: %v", err)
@@ -323,16 +327,10 @@ func CreatePsbtV1(utxo TxInput, outputs []TxOutput, unlockHeight uint32, scriptP
 		fmt.Println("output : ", output)
 		for addr, amount := range output {
 			fmt.Println("amount : ", amount)
-			address, err := btcutil.DecodeAddress(addr, &chaincfg.SigNetParams)
+			address, err := btcutil.DecodeAddress(addr, chainParams)
 			if err != nil {
 				return nil, err
 			}
-
-			// script, err := txscript.PayToAddrScript(address)
-			// if err != nil {
-			// 	fmt.Println(err)
-			// 	return nil, err
-			// }
 
 			TxOut = append(TxOut, wire.NewTxOut(int64(amount), address.ScriptAddress()))
 		}
@@ -443,4 +441,15 @@ func SignRawTransaction(tx string, wallet string) (string, error) {
 		return "", errors.New("error in signing raw transaction")
 	}
 	return response.Result.Hex, nil
+}
+
+func getChainParams() (*chaincfg.Params, error) {
+	env := viper.GetString("env")
+	if env == "dev" {
+		return &chaincfg.SigNetParams, nil
+	}
+	if env == "prod" {
+		return &chaincfg.MainNetParams, nil
+	}
+	return nil, fmt.Errorf("Invalid environment")
 }

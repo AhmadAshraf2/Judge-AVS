@@ -170,6 +170,7 @@ func RegisterOperator() {
 		fmt.Println("failed to derive public key: ", err)
 		return
 	}
+	fmt.Println("pubkey opr inside registration process: ", pubkey)
 	pubkeyBytes, err := hex.DecodeString(pubkey)
 	if err != nil {
 		fmt.Println("failed to derive public key: ", err)

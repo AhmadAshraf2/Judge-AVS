@@ -16,6 +16,12 @@ import (
 
 func initialize() {
 	utils.InitConfigFile()
+	env := viper.GetString("env")
+	if env != "dev" && env != "prod" {
+		fmt.Println("Invalid environment")
+		panic("Invalid environment")
+	}
+
 	utils.LoadBtcWallet(viper.GetString("wallet_name"))
 	ethAccount := ethComms.LoadEthAccount()
 	fmt.Println("Eth account: ", ethAccount.Address.Hex())
@@ -36,5 +42,3 @@ func main() {
 	ethComms.SubscribeToWithdrawRequests()
 	wg.Wait()
 }
-
-//abigen --bin=BitdsmRegistry/BitdsmRegistry.bin  --abi=BitdsmRegistry/BitdsmRegistry.abi  --pkg=BitdsmRegistry --out=BitdsmRegistry/BitdsmRegistry.go

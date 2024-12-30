@@ -40,74 +40,8 @@ func Server() {
 	router.HandleFunc("/eigen/node/services", ServicesHandler).Methods("GET")
 	router.HandleFunc("/eigen/node/services/{service_ID}/health", ServiceHealthHandler).Methods("GET")
 	router.HandleFunc("/eigen/get_address", GetAddressHandler).Methods("POST")
-	// router.HandleFunc("/eigen/bech32_to_hex", Bech32toHexHandler).Methods("POST")
-	// router.HandleFunc("/eigen/hex_to_bech32", HextoBech32Handler).Methods("POST")
-	// router.HandleFunc("/eigen/signed_psbt", GetSignedPsbtHandler).Methods("POST")
-
 	http.ListenAndServe(":8080", router)
 }
-
-// func Bech32toHexHandler(w http.ResponseWriter, r *http.Request) {
-// 	var request struct {
-// 		Address string `json:"address"`
-// 	}
-
-// 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-// 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	addr, err := utils.Bech32ToHex(request.Address)
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	response := map[string]string{
-// 		"AddressHex": addr,
-// 	}
-
-// 	responseJSON, err := json.Marshal(response)
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte(responseJSON))
-// 	return
-// }
-
-// func HextoBech32Handler(w http.ResponseWriter, r *http.Request) {
-// 	var request struct {
-// 		Address string `json:"address"`
-// 	}
-
-// 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-// 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	addr, err := utils.HexToBech32(request.Address, &chaincfg.SigNetParams)
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	response := map[string]string{
-// 		"AddressBech32": addr,
-// 	}
-
-// 	responseJSON, err := json.Marshal(response)
-// 	if err != nil {
-// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte(responseJSON))
-// 	return
-// }
 
 func GetAddressHandler(w http.ResponseWriter, r *http.Request) {
 	var request struct {
@@ -123,20 +57,11 @@ func GetAddressHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid Bitcoin public key", http.StatusBadRequest)
 		return
 	}
-	// if !utils.IsValidEthAddress(request.PodEthAddr) {
-	// 	http.Error(w, "Invalid Eth Address", http.StatusBadRequest)
-	// 	return
-	// }
+
 	newAddress, script, err := address.GenerateSimpleMultisigAddress(request.PubKey, "")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-
-	// addressHex, err := utils.Bech32ToHex(newAddress)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
 
 	response := map[string]string{
 		"newAddress":    newAddress,

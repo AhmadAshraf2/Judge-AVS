@@ -1,4 +1,5 @@
 {
+    "env": "dev",
     "DB_port": "5432",
     "DB_host": "localhost",
     "DB_user": "forkscanner",
@@ -21,7 +22,7 @@
 
     "eth_rpc_host" : "https://holesky.infura.io/v3/e1dca20d79ba4d0d8f902572f1474105",
     "eth_ws_host" :"wss://holesky.infura.io/ws/v3/e1dca20d79ba4d0d8f902572f1474105",
-    "eth_keystore_dir": "keystore",
+    "eth_keystore_dir": "../wallet/keystore",
     "eth_keystore_passphrase": "Persario_1",
 
     "opr_metadata_uri" : "",
